@@ -101,4 +101,12 @@ def delete_acquisition(acq_id):
 
 # TODO: add method for searching items
 # TODO: add methods for managing checkouts
-# TODO: add methods for managing borrowers
+@apiv1.route('/borrowers', methods=['GET'])
+def get_borrowers():
+    '''Return all borrowers.'''
+    return jsonify(borrowers=[b.serialize for b in Borrower.query.all()])
+
+# TODO: add borrower DELETE method
+# TODO: add borrower GET by id method
+# TODO: add borrower PUT method
+# TODO: add borrower POST method
