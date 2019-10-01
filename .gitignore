@@ -1,0 +1,8 @@
+# virtualenv
+venv/
+
+# sqlite files
+*.sqlite
+
+# 
+__pycache__
