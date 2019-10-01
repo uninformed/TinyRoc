@@ -26,6 +26,7 @@ def create_item():
         title=request.json['title'],
         creator=request.json.get('creator', ''),
         publisher=request.json.get('publisher', ''),
+        location_id=request.json.get('location_id', None),
         notes=request.json.get('notes', '')
     )
     db.session.add(item)
