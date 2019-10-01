@@ -81,8 +81,8 @@ def get_acquisitions():
     '''Return all acquisition requests.'''
     return jsonify(acquisitions=[a.serialize for a in Acquisition.query.all()])
 
-@apiv1.route('/acquisition/<int:acq_id>')
-def get_acquisition(acq_id);
+@apiv1.route('/acquisition/<int:acq_id>', method=['GET'])
+def get_acquisition(acq_id):
     acq = Acquisition.query.filter_by(id=acq_id).first()
     if acq is None:
         abort(404)
