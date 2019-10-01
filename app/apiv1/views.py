@@ -1,8 +1,10 @@
 from flask import jsonify, abort, request
 
 from . import apiv1
-from ..models import Item
+from ..models import Item, Acquisition, Borrower, Checkout
 from .. import db
+
+# TODO: implement security measures for unsafe API methods
 
 @apiv1.route('/items', methods=['GET'])
 def get_items():
@@ -72,3 +74,20 @@ def update_item(item_id):
     db.session.add(item)
     db.session.commit()
     return jsonify(item=item.serialize)
+
+# TODO: add methods for managing acquisitions
+@apiv1.route('/acquisitions', methods=['GET'])
+def get_acquisitions():
+    '''Return all acquisition requests.'''
+    return jsonify(acquisitions=[a.serialize for a in Acquisition.query.all()])
+
+@apiv1.route('/acquisition/<int:acq_id>')
+def get_acquisition(acq_id);
+    acq = Acquisition.query.filter_by(id=acq_id).first()
+    if acq is None:
+        abort(404)
+    return jsonify(acq.serialize)
+
+# TODO: add method for searching items
+# TODO: add methods for managing checkouts
+# TODO: add methods for managing borrowers
