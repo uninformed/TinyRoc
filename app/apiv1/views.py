@@ -75,7 +75,6 @@ def update_item(item_id):
     db.session.commit()
     return jsonify(item=item.serialize)
 
-# TODO: add methods for managing acquisitions
 @apiv1.route('/acquisitions', methods=['GET'])
 def get_acquisitions():
     '''Return all acquisition requests.'''
@@ -96,6 +95,9 @@ def delete_acquisition(acq_id):
     db.session.delete(acq)
     db.session.commit()
     return jsonify({'result': True})
+
+# TODO: add PUT acquisition method
+# TODO: add POST acquisition method
 
 # TODO: add method for searching items
 # TODO: add methods for managing checkouts
