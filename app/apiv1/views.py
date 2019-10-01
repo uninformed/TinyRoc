@@ -6,11 +6,12 @@ from .. import db
 
 @apiv1.route('/items', methods=['GET'])
 def get_items():
-    """Returns all items in the collection."""
+    '''Return all items in the collection.'''
     return jsonify(items=[i.serialize for i in Item.query.all()])
 
 @apiv1.route('/item/<int:item_id>', methods=['GET'])
 def get_item(item_id):
+    '''Return a specific item from the collection.'''
     item = Item.query.filter_by(id=item_id).first()
     if item is None:
         abort(404)
@@ -18,7 +19,7 @@ def get_item(item_id):
 
 @apiv1.route('/items', methods=['POST'])
 def create_item():
-    """Add a new item to the collection."""
+    '''Add a new item to the collection.'''
     if not request.json or not 'title' in request.json:
         abort(400)
     item = Item(
@@ -33,6 +34,7 @@ def create_item():
 
 @apiv1.route('/item/<int:item_id>', methods=['DELETE'])
 def delete_item(item_id):
+    '''Remove an item from the collection.'''
     item = Item.query.filter_by(id=item_id).first()
     if item is None:
         abort(404)
