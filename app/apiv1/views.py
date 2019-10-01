@@ -171,7 +171,15 @@ def get_borrowers():
     '''Return all borrowers.'''
     return jsonify(borrowers=[b.serialize for b in Borrower.query.all()])
 
-# TODO: add borrower DELETE method
+@apiv1.route('/borrower/<int:borrower_id>', methods=['DELETE'])
+def delete_borrower(borrower_id):
+    borrower = Borrower.query.filter_by(id=borrower_id).first()
+    if borrower is None:
+        abort(404)
+    db.session.delete(borrower)
+    db.session.commit()
+    return jsonify({'result': True})
+
 # TODO: add borrower GET by id method
 # TODO: add borrower PUT method
 # TODO: add borrower POST method
