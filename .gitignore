@@ -1,8 +1,9 @@
 # virtualenv
 venv/
 
-# sqlite files
+# data files
 *.sqlite
+*.csv
 
-# 
+#
 __pycache__
