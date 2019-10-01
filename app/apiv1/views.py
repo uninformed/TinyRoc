@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from flask import jsonify, abort, request
 
 from . import apiv1
@@ -99,8 +101,71 @@ def delete_acquisition(acq_id):
 # TODO: add PUT acquisition method
 # TODO: add POST acquisition method
 
+@apiv1.route('/checkout', methods=['POST'])
+def checkout():
+    '''Check one or more items out to a borrower.
+
+    Expects a JSON request containing a list of ```item_id```s
+    and a ```borrower_id```.
+
+    :returns: JSON reponse with a list of failed checkouts and a list of successful ones
+    '''
+    # make sure we got a json request
+    if not request.json:
+        abort(400)
+
+    if 'items' not in request.json or type(request.json['items']) != list:
+        abort(400)
+    if 'borrower_id' not in request.json or type(request.json['borrower_id']) != int:
+        abort(400)
+
+    borrower = Borrower.query.filter_by(id=request.json['borrower_id']).first()
+    if borrower is None:
+        abort(404)
+
+    succeeded = []
+    failed = []
+    for item_id in request.json['items']:
+        item = Item.query.filter_by(id=item_id).first()
+        if item is None or not item.is_available():
+            failed.append(item_id)
+        else:
+            co = Checkout(borrower=borrower,
+                          item=item,
+                          # IDEA: calculate loan period based on borrower standing?
+                          date_due=datetime.utcnow()+timedelta(days=14),
+                         )
+            db.session.add(co)
+            succeeded.append(item_id)
+    db.session.commit()
+    return jsonify(succeeded=succeeded, failed=failed)
+
+@apiv1.route('/checkin', methods=['POST'])
+def checkin():
+    '''Check one or more items in.
+
+    Expects a JSON request containing a list of ```item_id```s.
+    '''
+    if not request.json:
+        abort(400)
+    if 'items' not in request.json or type(request.json['items']) != list:
+        abort(400)
+
+    failed, succeeded = [], []
+    for item_id in request.json['items']:
+        co = Checkout.query.filter_by(item_id=item_id, date_returned=None).first()
+        if co is None:
+            failed.append(item_id)
+        else:
+            co.date_returned = datetime.utcnow()
+            db.session.add(co)
+            succeeded.append(item_id)
+    db.session.commit()
+    return jsonify(succeeded=succeeded, failed=failed)
+
+
 # TODO: add method for searching items
-# TODO: add methods for managing checkouts
+
 @apiv1.route('/borrowers', methods=['GET'])
 def get_borrowers():
     '''Return all borrowers.'''
