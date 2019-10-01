@@ -88,6 +88,15 @@ def get_acquisition(acq_id):
         abort(404)
     return jsonify(acq.serialize)
 
+@apiv1.route('/acquisiton/<int:acq_id>', methods=['DELETE'])
+def delete_acquisition(acq_id):
+    acq = Acquisition.query.filter_by(id=acq_id).first()
+    if acq is None:
+        abort(404)
+    db.session.delete(acq)
+    db.session.commit()
+    return jsonify({'result': True})
+
 # TODO: add method for searching items
 # TODO: add methods for managing checkouts
 # TODO: add methods for managing borrowers
