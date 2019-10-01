@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import url_for
 
@@ -9,6 +9,7 @@ class Checkout(db.Model):
     item_id = db.Column(db.Integer, db.ForeignKey('Items.id'), primary_key=True)
     borrower_id = db.Column(db.Integer, db.ForeignKey('Borrowers.id'), primary_key=True)
     date_borrowed = db.Column(db.DateTime, default=datetime.utcnow)
+    date_due = db.Column(db.DateTime, default=None)
     date_returned = db.Column(db.DateTime, default=None)
 
     @property
