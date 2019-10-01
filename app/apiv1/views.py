@@ -8,6 +8,8 @@ from .. import db
 
 # TODO: implement security measures for unsafe API methods
 
+# ----- Item methods -----
+
 @apiv1.route('/items', methods=['GET'])
 def get_items():
     '''Return all items in the collection.'''
@@ -77,6 +79,10 @@ def update_item(item_id):
     db.session.commit()
     return jsonify(item=item.serialize)
 
+# TODO: add method for searching items
+
+# ----- Acquisition methods -----
+
 @apiv1.route('/acquisitions', methods=['GET'])
 def get_acquisitions():
     '''Return all acquisition requests.'''
@@ -100,6 +106,8 @@ def delete_acquisition(acq_id):
 
 # TODO: add PUT acquisition method
 # TODO: add POST acquisition method
+
+# ----- Checkout methods -----
 
 @apiv1.route('/checkout', methods=['POST'])
 def checkout():
@@ -163,8 +171,7 @@ def checkin():
     db.session.commit()
     return jsonify(succeeded=succeeded, failed=failed)
 
-
-# TODO: add method for searching items
+# ----- Borrower methods -----
 
 @apiv1.route('/borrowers', methods=['GET'])
 def get_borrowers():
@@ -183,3 +190,5 @@ def delete_borrower(borrower_id):
 # TODO: add borrower GET by id method
 # TODO: add borrower PUT method
 # TODO: add borrower POST method
+
+# ----- Location methods -----
